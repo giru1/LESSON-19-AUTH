@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+/.idea
+dao/__pycache__
+helpers/__pycache__
+views/__pycache__
+.DS_Store
+__pycache__
+=======
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -127,3 +135,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+>>>>>>> b4ed159e68b1d2c883f07614ff5e9534c8852071
