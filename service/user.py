@@ -1,4 +1,5 @@
 from dao.user import UserDAO
+from utils import get_hashed_pass
 
 
 class UserService:
@@ -6,20 +7,9 @@ class UserService:
         self.dao = dao
 
     def register(self, data: dict) -> dict:
-       return self.dao.create(data)
-
-
-
-
-
-
-
-
-
-
-
-
-
+        data['password'] = get_hashed_pass(data['password'])
+        self.dao.create(data)
+        return data
 
     def get_one(self, bid):
         return self.dao.get_one(bid)
