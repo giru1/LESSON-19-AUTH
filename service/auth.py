@@ -1,6 +1,8 @@
+from flask import request
+
 from dao.auth import AuthDAO
 from flask_restx import abort
-from utils import get_hashed_pass, genereta_tokens
+from utils import get_hashed_pass, genereta_tokens, decode_token
 
 
 class AuthService:
@@ -23,11 +25,17 @@ class AuthService:
                 'role': user_data['role']
             }
         )
-
-        print(tokens)
-
         return tokens
 
 
-    # def get_new_token(self, refresh_token):
-    #     return self.dao.get_one(bid)
+    def get_new_token(self, refresh_token: str):
+        decoded_token = decode_token(refresh_token, refresh_token=True)
+
+        token = genereta_tokens(
+            data={
+                'username': decoded_token['username'],
+                'role': decoded_token['role']
+            }
+        )
+        return token
+

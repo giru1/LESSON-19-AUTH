@@ -2,6 +2,8 @@ import base64
 import hashlib
 from datetime import timedelta, datetime
 from typing import Dict
+from flask import request
+from flask_restx import abort
 
 import jwt
 
@@ -40,3 +42,53 @@ def genereta_tokens(data: dict) -> Dict[str, str]:
         'access_token': access_token,
         'refresh_token': refresh_token
     }
+
+
+def get_token_headera(headers: dict):
+    if 'Authorization' not in headers:
+        abort(401)
+
+    return headers['Authorization'].split(' ')[-1]
+
+
+def decode_token(token: str, refresh_token: bool = False):
+    decode_token = {}
+    try:
+        decode_token = jwt.decode(
+            jwt=token,
+            key=constants.SECRET_HERE,
+            algorithms=[constants.JWT_ALGORITHM],
+        )
+    except jwt.PyJWTError as e:
+        abort(401, message='no valid token')
+
+    if decode_token['refresh_token'] != refresh_token:
+        abort(400, message='wrong token type')
+
+    return decode_token
+
+
+def auth_required(func):
+    def wrapper(*args, **kwargs):
+
+        # token = get_token_headera(request.headers)
+        #
+        # decoded_token = decode_token(token)
+
+        return func(*args, **kwargs)
+    return wrapper
+
+
+def admin_access_required(func):
+    def wrapper(*args, **kwargs):
+        token = get_token_headera(request.headers)
+
+        decoded_token = decode_token(token)
+        if decoded_token['role'] != 'admin':
+            abort(403)
+        return func(*args, **kwargs)
+    return wrapper
+
+
+
+

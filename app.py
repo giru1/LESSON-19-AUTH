@@ -8,6 +8,7 @@ from views.genres import genre_ns
 from views.movies import movie_ns
 from views.users import user_ns
 from views.auth import auth_ns
+from views.protected import protected_ns
 from dao.model.user import User
 
 
@@ -26,6 +27,7 @@ def register_extensions(app):
     api.add_namespace(movie_ns)
     api.add_namespace(user_ns)
     api.add_namespace(auth_ns)
+    api.add_namespace(protected_ns)
     create_data(app, db)
 
 
