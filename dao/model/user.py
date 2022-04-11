@@ -10,6 +10,9 @@ class User(db.Model):
     password = db.Column(db.String)
     role = db.Column(db.String)
 
+    def __repr__(self):
+        return f'{self.username}'
+
 
 class UserSchema(Schema):
     id = fields.Int()

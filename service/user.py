@@ -1,5 +1,8 @@
+import base64
+import hashlib
+
+import constants
 from dao.user import UserDAO
-from utils import get_hashed_pass
 
 
 class UserService:
@@ -14,6 +17,9 @@ class UserService:
     def get_one(self, bid):
         return self.dao.get_one(bid)
 
+    def get_by_username(self, username):
+        return self.dao.get_by_username(username)
+
     def get_all(self):
         return self.dao.get_all()
 
@@ -26,3 +32,12 @@ class UserService:
 
     def delete(self, rid):
         self.dao.delete(rid)
+
+
+def get_hashed_pass(password: str) -> str:
+    return base64.b64encode(hashlib.pbkdf2_hmac(
+        hash_name=constants.HASH_NAME,
+        salt=constants.HASH_SALT.encode('utf-8'),
+        iterations=constants.HASH_GEN_ITERATIONS,
+        password=password.encode('utf-8')
+    )).decode('utf-8', "ignore")

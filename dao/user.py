@@ -11,9 +11,11 @@ class UserDAO:
     def get_all(self):
         return self.session.query(User).all()
 
+    def get_by_username(self, username):
+        return self.session.query(User).filter(User.username == username).first()
+
     def create(self, data):
         user = User(**data)
-        print(data)
         self.session.add(user)
         self.session.commit()
         return user
@@ -28,7 +30,6 @@ class UserDAO:
         user.username = user_id.get("username")
         user.password = user_id.get("password")
         user.role = user_id.get("role")
-
 
         self.session.add(user)
         self.session.commit()
