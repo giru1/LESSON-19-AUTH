@@ -6,11 +6,12 @@ from typing import Dict
 import jwt
 from flask import request
 from flask_restx import abort
-
+from setup_db import db
 import constants
+from dao.user import UserDAO
 from service.user import UserService
-
-user_service = UserService
+user_dao = UserDAO(session=db.session)
+user_service = UserService(dao=user_dao)
 
 
 def get_hashed_pass(password: str) -> str:
@@ -78,7 +79,7 @@ def auth_required(func):
         print(decoded_token['username'])
         print(decoded_token)
         print(type(decoded_token))
-        if not user_service.get_by_username(decoded_token['username']):
+        if not user_service.get_by_username(decoded_token.get('username')):
             abort(401)
 
         return func(*args, **kwargs)

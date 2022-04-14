@@ -2,13 +2,17 @@ from flask import request
 
 from flask_restx import abort
 from utils import get_hashed_pass, genereta_tokens, decode_token
+
+from setup_db import db
+from dao.user import UserDAO
 from service.user import UserService
 
-user_service = UserService
+user_dao = UserDAO(session=db.session)
+user_service = UserService(dao=user_dao)
 
 
 class AuthService:
-    def __init__(self, user_service: UserService):
+    def __init__(self, user_service: user_service):
         self.user_service = user_service
 
     def login(self, data: dict):
